@@ -43,17 +43,11 @@ function updateQuantity (id, color, quantity) {
         products[id][color] = parseInt(quantity)
     }
 
-    // let value = document.querySelector('value')
-
-    // if(value !=){ Si valeur différente de celle qui est dans le local storage
-    //     products.splice(2,0) // Voir comment ajouter la quantité choisie par l'utilisateur
-    // }
-
     updateLocalStorage(products)
     location.reload()
 }
 
-function removeProduct (id, color) { // Retire le produit du local storage
+function removeProduct (id, color) {
 
     let products = getProductsFromLocalStorage()
 

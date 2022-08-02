@@ -1,4 +1,6 @@
 const listOfProducts = getProductsFromLocalStorage()
+let totalofProducts = 0
+let totalPrice = 0
 console.log(listOfProducts);
 
 let cart__items = document.getElementById("cart__items")
@@ -46,23 +48,9 @@ for(let [id,colors] of Object.entries(listOfProducts)){
                     })
                   })
 
-
-
-                    // const input = document.querySelector('input');
-                    // const value = document.querySelector('value');
-
-                    // for(let [quantity] of Object.entries(quantity)){
-                    //   input.addEventListener('change', updateValue);
-                    //   function updateValue(event) {
-                    //     value.innerText = e.target.value;
-                    //   }
-                    // }
-
                     let btnsRemove = document.getElementsByClassName("deleteItem")
-                    // console.log(btnsRemove)
 
                     for(let btnRemove of btnsRemove){
-                      // console.log(color)
                       btnRemove.addEventListener('click', function(){
                         let article = btnRemove.closest("article")
                         let elementId = article.getAttribute("data-id")
@@ -70,7 +58,16 @@ for(let [id,colors] of Object.entries(listOfProducts)){
                         removeProduct(elementId, elementColor)
                       });
                     }
-                    //Ajouter quantité totale + prix total
+
+                    const totalCartQuantity = document.getElementById("totalQuantity")
+                    const totalCartPrice = document.getElementById("totalPrice")
+
+                    totalofProducts += parseInt(quantity)
+                    totalPrice += product.price * quantity
+
+                    totalCartQuantity.innerHTML = totalofProducts
+                    totalCartPrice.innerHTML = totalPrice
+
                 }
             })
 
@@ -85,11 +82,89 @@ for(let [id,colors] of Object.entries(listOfProducts)){
 let email = document.getElementById("email")
 let emailErrorMessage = document.getElementById("emailErrorMsg")
 let emailRegEx = /^[\w\.=-]+@[\w\.-]+\.[\w]{2,3}$/g
+
+let firstName = document.getElementById("firstName")
+let firstNameErrorMessage = document.getElementById("firstNameErrorMsg")
+let firstNameRegEx = /^\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/g
+
+let lastName = document.getElementById("lastName")
+let lastNameErrorMessage = document.getElementById("lastNameErrorMsg")
+let lastNameRegEx = /^\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/g
+
+let address = document.getElementById("address")
+let addressErrorMessage = document.getElementById("addressErrorMsg")
+let addressRegEx = /^[A-Za-z0-9]/g
+
+let city = document.getElementById("city")
+let cityErrorMessage = document.getElementById("cityErrorMsg")
+let cityRegEx = /^\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/g
+
 let btnOrder = document.getElementById("order")
 
 btnOrder.addEventListener('click', function(event){
   event.preventDefault()
   let formChecker = 0
+
+
+  if(firstName.value === ""){
+    firstName.style.border = "red 2px solid"
+    firstNameErrorMessage.innerHTML = "Ce champ ne doit pas être vide"
+  } else if(firstName.value.length < 3){
+    firstName.style.border = "red 2px solid"
+    firstNameErrorMessage.innerHTML = "Ce champ doit au moins comporter 3 caractères"
+  } else if(firstName.value.match(firstNameRegEx) === null){
+    firstName.style.border = "red 2px solid"
+    firstNameErrorMessage.innerHTML = "Ce champ doit être un prénom valide"
+  } else {
+    formChecker++
+    firstName.style.border = "green 2px solid"
+    firstNameErrorMessage.innerHTML = ""  
+  }
+
+  if(lastName.value === ""){
+    lastName.style.border = "red 2px solid"
+    lastNameErrorMessage.innerHTML = "Ce champ ne doit pas être vide"
+  } else if(lastName.value.length < 3){
+    lastName.style.border = "red 2px solid"
+    lastNameErrorMessage.innerHTML = "Ce champ doit au moins comporter 3 caractères"
+  } else if(lastName.value.match(lastNameRegEx) === null){
+    lastName.style.border = "red 2px solid"
+    lastNameErrorMessage.innerHTML = "Ce champ doit être un nom valide"
+  } else {
+    formChecker++
+    lastName.style.border = "green 2px solid"
+    lastNameErrorMessage.innerHTML = ""  
+  }  
+
+  if(address.value === ""){
+    address.style.border = "red 2px solid"
+    addressErrorMessage.innerHTML = "Ce champ ne doit pas être vide"
+  } else if(address.value.length < 3){
+    address.style.border = "red 2px solid"
+    addressErrorMessage.innerHTML = "Ce champ doit au moins comporter 3 caractères"
+  } else if(address.value.match(addressRegEx) === null){
+    address.style.border = "red 2px solid"
+    addressErrorMessage.innerHTML = "Ce champ doit être une adresse valide"
+  } else {
+    formChecker++
+    address.style.border = "green 2px solid"
+    addressErrorMessage.innerHTML = ""  
+  }
+  
+  if(city.value === ""){
+    city.style.border = "red 2px solid"
+    cityErrorMessage.innerHTML = "Ce champ ne doit pas être vide"
+  } else if(city.value.length < 3){
+    city.style.border = "red 2px solid"
+    cityErrorMessage.innerHTML = "Ce champ doit au moins comporter 3 caractères"
+  } else if(city.value.match(cityRegEx) === null){
+    city.style.border = "red 2px solid"
+    cityErrorMessage.innerHTML = "Ce champ doit être une ville valide"
+  } else {
+    formChecker++
+    city.style.border = "green 2px solid"
+    cityErrorMessage.innerHTML = ""  
+  }
 
   if(email.value === ""){
     email.style.border = "red 2px solid"
@@ -105,40 +180,40 @@ btnOrder.addEventListener('click', function(event){
     email.style.border = "green 2px solid"
     emailErrorMessage.innerHTML = ""  
   }
-//Suite des vérifs formulaire
-
-// /^\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/g => pour les noms
-// /^[A-Za-z0-9]/g => pour les adresses
-
-//Pour la ville, utiliser la regEx des noms
-
-
 
   if(formChecker < 5){
     event.preventDefault()
     alert("Veuillez vérifier les informations saisies dans le formulaire")
   } else {
-    //Récupérer les infos et envoyer la commande
     const contact = {
       firstName: firstName.value,
-      // lastName
-      // address
-      // city
-      // email
+      lastName: lastName.value,
+      address : address.value,
+      city : city.value,
+      email : email.value,
     }
-    // Créer un tableau vide (const productToBuy = [])
-    //Créer une boucle sur la liste des produits récupérés au début du script (getproductfromlocalstorage) | utiliser push pour insérer les IDs
-    //Infos du form à envoyer en fetch avec la méthode POST au bon format
+
+    const products = []
+
+    for (let [id] of Object.entries(listOfProducts)) {
+      products.push(id)
+    }
+
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: { 
+      'Accept': 'application/json', 
+      'Content-Type': 'application/json; charset=UTF-8'},
+      body: JSON.stringify({contact, products})
+    }).then(function(res){
+      res.json()
+      .then(function(order){
+        alert("Votre commande a été passée avec succès")
+        location.replace(`confirmation.html?id=${order.orderId}`)
+      })
+    }).catch((error)=>{
+      console.log(error)
+    })
+
   }
 })
-            
-            // function(checkEmail){
-            //   ^[\w\.=-]+@[\w\.-]+\.[\w]{2,3}$
-            // }
-
-            // if(checkEmail === true) {
-            //   console.log("Mail OK")
-            // } else {
-            //   console.log("Mail incorrect"+error)
-            // }
-
